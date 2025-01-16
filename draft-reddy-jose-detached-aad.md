@@ -67,27 +67,46 @@ derived out-of-band otherwise.
 
 # JWE JSON Serialization
 
-In JWE JSON Serialization, the existing "aad" parameter can be utilized to signal that the AAD is detached. When the AAD is detached, the 
-"aad" parameter is set to an empty string (`""`), indicating that the AAD MUST be computed by both the sender and receiver from 
+In JWE JSON Serialization, the existing "aad" parameter can be utilized to signal that the AAD is detached. When the AAD is detached, the
+"detached_aad" parameter is set to true, indicating that the AAD MUST be computed by both the sender and receiver from
 contextual information.
 
-- If the "aad" parameter is an empty string, the AAD MUST be derived out-of-band. 
+- If the "detached_aad" parameter is set to true, the AAD MUST be derived out-of-band.
+
 - If the "aad" parameter contains data, it is used directly as the AAD for encryption.
 
 Example:
 
+
+A JSON Encoded JWE:
+
 ~~~
 {
-  "protected": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXRSJ9",
-  "encrypted_key": "...",
-  "iv": "...",
-  "ciphertext": "...",
-  "tag": "...",
-  "aad": ""
+  "protected": "eyJhbGciOiJIUEtFLVAyNTYtU0hBMjU2LUExMjhHQ00iLCJlbmMiOiJkaXIiLCJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjpTNkFYZmRVXzZZZnp2dTBLRERKYjBzRnV3bklXUGs2TE1URXJZaFBiMzJzIiwicHNrX2lkIjoib3VyLXByZS1zaGFyZWQta2V5LWlkIiwiYXV0aF9raWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjpTNkFYZmRVXzZZZnp2dTBLRERKYjBzRnV3bklXUGs2TE1URXJZaFBiMzJzIn0",
+  "encrypted_key": "BD7QVodtG-FwYASgb36zuTzUCc80aiYwS6JOOE-6_heUGyAZt-cU0818e4oYqP7ebBuW3KTM9EQA0vM5fWp6hj0",
+  "ciphertext": "ZxqtYoomgVQGctnv1I_EBVI1NIeJ7qJw2iVtqwUw3fXa8FK-",
+  "aad": "8J-PtOKAjeKYoO-4jyBiZXdhcmUgdGhlIGFhZCE"
 }
 ~~~
 
-In this case, the empty "aad" field indicates that the AAD must be derived from contextual information shared between the sender and receiver.
+After verification:
+
+~~~
+{
+  "protectedHeader": {
+    "alg": "HPKE-0",
+    "enc": "dir",
+    "kid": "urn:ietf:params:oauth:jwk-thumbprint:sha-256:S6AXfdU_6Yfzvu0KDDJb0sFuwnIWPk6LMTErYhPb32s",
+    "psk_id": "our-pre-shared-key-id",
+    "auth_kid": "urn:ietf:params:oauth:jwk-thumbprint:sha-256:S6AXfdU_6Yfzvu0KDDJb0sFuwnIWPk6LMTErYhPb32s",
+    "aad_detached": true
+  },
+  "plaintext": "This is plaintext!",
+  "aad": "This is aad!"
+}
+~~~
+
+In this case, the "aad_detached" parameter set to true indicates that the AAD must be derived from contextual information shared between the sender and receiver.
 
 
 # JWE Compact Serialization
@@ -102,7 +121,7 @@ To enable the use of detached Additional Authenticated Data (AAD) without introd
    - The detached AAD is not included in the JWE Compact Serialization format.
    
 2. Optional Protected Header Parameter:
-   - A new optional parameter, "aad_detached", is introduced in the JWE Protected Header.
+   - A new optional parameter, "detached_aad", is introduced in the JWE Protected Header.
    - When set to `true`, this parameter indicates that the AAD is detached and must be obtained through an external context.
 
 3. Backward Compatibility:
@@ -114,7 +133,7 @@ The "aad_detached": true parameter is included in the JWE Protected Header. For 
 {
   "alg": "HPKE-0",
   "enc": "A256GCM",
-  "aad_detached": true
+  "detached_aad": true
 }
 ~~~
 
@@ -157,7 +176,7 @@ When using detached AAD, the sender and receiver MUST follow the same derivation
    ~~~
 
 4. Apply Cryptographic Hashing
-   - Apply a cryptographic hash function (e.g., SHA-256) to the serialized canonicalized JSON string to derive the AAD. The resulting hash will serve as the AAD used in the encryption operation. The use of SHA-256 is RECOMMENDED, but other cryptographic hash functions MAY be used as long as they provide equivalent or stronger security properties.
+   - Apply a cryptographic hash function (e.g., SHA-256) to the serialized canonicalized JSON string to derive the AAD. The resulting hash will serve as the AAD used in the encryption operation. The use of SHA-256 is RECOMMENDED; however, other cryptographic hash functions MAY be used if they provide equivalent or stronger security properties.
    Example:    
 
    ~~~
@@ -166,13 +185,27 @@ When using detached AAD, the sender and receiver MUST follow the same derivation
 
 5. Use the Derived AAD in Encryption
    - The Step 15 in Section 5.1 of of {{RFC7516}} specifies how the AAD is used in the encryption operation. In the detached AAD case, the derived AAD is treated as though it were part of the encryption context, even though it is never transmitted within the JWE structure.
-   - The derived AAD is used along side the Content Encryption Key (CEK), JWE IV, and the message M to create the JWE Ciphertext and JWE Authentication Tag.
-   -  Both sender and receiver MUST compute the AAD independently to ensure consistency.
-   -  The AAD is never transmitted within the JWE structure but is derived from the contextual elements out-of-band.
+
+   - In the case of a message without the JWE AAD but with the derived AAD, the derived AAD is used alongside the Content Encryption Key (CEK), JWE IV, and the message M to create the JWE Ciphertext and JWE Authentication Tag.
+      * The Additional Authenticated Data (AAD) encryption parameter is:
+
+      ~~~
+        ASCII(Encoded Protected Header || '.' ||BASE64URL(Detached AAD)).
+      ~~~
+
+   -  In the case of a message with the JWE AAD and the derived AAD, the derived AAD is used alongside the Content Encryption Key (CEK), JWE IV, JWE AAD and the message M to create the JWE Ciphertext and JWE Authentication Tag.
+      * The Additional Authenticated Data (AAD) encryption parameter is:
+
+      ~~~
+         ASCII(Encoded Protected Header || '.' ||BASE64URL(JWE AAD)||BASE64URL(Detached AAD)).
+      ~~~
+
+   -  Both the sender and receiver MUST compute the detached AAD independently to ensure consistency.
+   -  The detached AAD is never transmitted within the JWE structure but is derived from the contextual elements out-of-band.
 
 6. Error Handling
 
-   - If the derived AAD does not match the expected value during decryption, the JWE MUST be treated as invalid, and processing MUST be aborted. 
+   - If the derived AAD does not match the expected value during decryption, the JWE MUST be treated as invalid, and the decryption process MUST fail. 
 
 # Security Considerations
 
@@ -191,7 +224,7 @@ The following entry is requested to be added by IANA to the "JSON Web Signature 
 
 ### aad_detached
 
-- Header Parameter Name: "aad_detached"
+- Header Parameter Name: "detached_aad"
 - Header Parameter Description: Indicates that the AAD is detached and must be conveyed through an external mechanism.
 - Header Parameter Usage Location(s): JWE
 - Change Controller: IETF
