@@ -67,13 +67,12 @@ derived out-of-band otherwise.
 
 # JWE JSON Serialization
 
-In JWE JSON Serialization, the existing "aad" parameter can be utilized to signal that the AAD is detached. When the AAD is detached, the
-"detached_aad" parameter is set to true, indicating that the AAD MUST be computed by both the sender and receiver from
-contextual information.
+When the AAD is detached, the "detached_aad" parameter is set to true, indicating that the AAD MUST be computed by both the sender and receiver from contextual information.
 
-- If the "detached_aad" parameter is set to true, the AAD MUST be derived out-of-band.
-
+- If the "detached_aad" parameter is set to true, the detached AAD MUST be derived out-of-band, following the process outlined in Step 5 of {{Derived}}.
 - If the "aad" parameter contains data, it is used directly as the AAD for encryption.
+- If both the "detached_aad" and "aad" parameters are present, the AADs are combined and used according to the process described in Step 5 of {{Derived}}.
+- The derived AAD is treated as part of the encryption context, but is never transmitted within the JWE structure.
 
 Example:
 
@@ -140,7 +139,7 @@ The "aad_detached": true parameter is included in the JWE Protected Header. For 
 
 # Deriving detached AAD
 
-## Steps for Derivation
+## Steps for Derivation {#Derive}
 
 When using detached AAD, the sender and receiver MUST follow the same derivation process to ensure consistent results. The derived AAD is never transmitted; instead, it is independently computed by both parties. The process involves:
 
