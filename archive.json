@@ -1,0 +1,71 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2025-01-16T01:38:44.138374+00:00",
+  "repo": "tireddy2/jwe-detached-aad",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDONqtXSs6mUFLr",
+      "title": "Handling of detached AAD with and without JWE AAD",
+      "url": "https://github.com/tireddy2/jwe-detached-aad/issues/1",
+      "state": "OPEN",
+      "author": "ilaril",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The draft is not clear what happens when decrypting message that has both detached and JWE AAD. Using JWE AAD in this situation (as seems to be implied) would be a major security problem. The proper thing would be to use both.\r\n\r\nThe proper way to solve this would be to specify how \"Additional Authenticated Data encryption parameter\" is formed in the following cases:\r\n* Message with detached AAD, but no JWE AAD.\r\n  - Obviously, this needs to be distinct from the existing JWE AAD but no detached AAD case.\r\n* Message with both detached AAD and JWE AAD.\r\n\r\nOne way to do this would be to prepend `~detached_aad.` to the existing forms. This would give:\r\n* `~detached_aad.ey_protected_header` for the detached AAD / no JWE AAD case (which is distinct from `jwe_aad.ey_protected_header` given by JWE AAD / no detached AAD case).\r\n* `~detached_aad.jwe_aad.ey_protected_header` for both detached and JWE AAD case.\r\n\r\nI do not see reason to do anything differently with compact serialization and JSON serialization. Compact serialization can not have JWE AAD, and JSON serialization might not have JWE AAD, but that has no bearing if application specifies detached AAD to use.",
+      "createdAt": "2025-01-15T16:21:15Z",
+      "updatedAt": "2025-01-15T16:21:15Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
+  "pulls": []
+}
