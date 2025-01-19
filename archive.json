@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-16T01:38:44.138374+00:00",
+  "timestamp": "2025-01-19T01:44:59.368572+00:00",
   "repo": "tireddy2/jwe-detached-aad",
   "labels": [
     {
@@ -62,10 +62,71 @@
       "labels": [],
       "body": "The draft is not clear what happens when decrypting message that has both detached and JWE AAD. Using JWE AAD in this situation (as seems to be implied) would be a major security problem. The proper thing would be to use both.\r\n\r\nThe proper way to solve this would be to specify how \"Additional Authenticated Data encryption parameter\" is formed in the following cases:\r\n* Message with detached AAD, but no JWE AAD.\r\n  - Obviously, this needs to be distinct from the existing JWE AAD but no detached AAD case.\r\n* Message with both detached AAD and JWE AAD.\r\n\r\nOne way to do this would be to prepend `~detached_aad.` to the existing forms. This would give:\r\n* `~detached_aad.ey_protected_header` for the detached AAD / no JWE AAD case (which is distinct from `jwe_aad.ey_protected_header` given by JWE AAD / no detached AAD case).\r\n* `~detached_aad.jwe_aad.ey_protected_header` for both detached and JWE AAD case.\r\n\r\nI do not see reason to do anything differently with compact serialization and JSON serialization. Compact serialization can not have JWE AAD, and JSON serialization might not have JWE AAD, but that has no bearing if application specifies detached AAD to use.",
       "createdAt": "2025-01-15T16:21:15Z",
-      "updatedAt": "2025-01-15T16:21:15Z",
+      "updatedAt": "2025-01-16T11:58:03Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "tireddy2",
+          "authorAssociation": "OWNER",
+          "body": "The Ilari for the feedback, raised https://github.com/tireddy2/jwe-detached-aad/pull/2 to address your comments. ",
+          "createdAt": "2025-01-16T11:58:03Z",
+          "updatedAt": "2025-01-16T11:58:03Z"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "id": "I_kwDONqtXSs6mp-ww",
+      "title": "Please do not do this",
+      "url": "https://github.com/tireddy2/jwe-detached-aad/issues/3",
+      "state": "OPEN",
+      "author": "bc-pi",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "please \n\nsee https://github.com/ietf-wg-jose/draft-ietf-jose-hpke-encrypt/issues/13#issuecomment-2598790016 for more ",
+      "createdAt": "2025-01-17T18:02:45Z",
+      "updatedAt": "2025-01-17T19:07:23Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "ilaril",
+          "authorAssociation": "NONE",
+          "body": "Reply: https://github.com/ietf-wg-jose/draft-ietf-jose-hpke-encrypt/issues/13#issuecomment-2599005193\n\nIn short, I think that **assuming** the problem is to be solved, this is the proper way to do it (with various technical details fixed).",
+          "createdAt": "2025-01-17T19:07:22Z",
+          "updatedAt": "2025-01-17T19:07:22Z"
+        }
+      ]
     }
   ],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 2,
+      "id": "PR_kwDONqtXSs6H-6_w",
+      "title": "Address comments from Ilari",
+      "url": "https://github.com/tireddy2/jwe-detached-aad/pull/2",
+      "state": "MERGED",
+      "author": "tireddy2",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-01-16T10:15:43Z",
+      "updatedAt": "2025-01-17T05:27:08Z",
+      "baseRepository": "tireddy2/jwe-detached-aad",
+      "baseRefName": "main",
+      "baseRefOid": "0b76e8032aedaab328c48af3cbf5fc24ce49f8a9",
+      "headRepository": "tireddy2/jwe-detached-aad",
+      "headRefName": "tireddy2-patch-1",
+      "headRefOid": "6d3bd3f717f8c257f369c561e0855a1950554df4",
+      "closedAt": "2025-01-17T05:27:08Z",
+      "mergedAt": "2025-01-17T05:27:08Z",
+      "mergedBy": "tireddy2",
+      "mergeCommit": {
+        "oid": "6b6084cffdc22ef798bbbbf24f18e51a1b5a1d19"
+      },
+      "comments": [],
+      "reviews": []
+    }
+  ]
 }
