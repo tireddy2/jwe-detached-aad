@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-23T01:39:30.842141+00:00",
+  "timestamp": "2025-01-26T01:41:45.217996+00:00",
   "repo": "tireddy2/jwe-detached-aad",
   "labels": [
     {
@@ -127,6 +127,48 @@
       },
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDONqtXSs6I5kEK",
+      "title": "Fix bug",
+      "url": "https://github.com/tireddy2/jwe-detached-aad/pull/4",
+      "state": "MERGED",
+      "author": "hannestschofenig",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Without this change, the draft does not \"build\"",
+      "createdAt": "2025-01-24T13:26:46Z",
+      "updatedAt": "2025-01-24T15:56:03Z",
+      "baseRepository": "tireddy2/jwe-detached-aad",
+      "baseRefName": "main",
+      "baseRefOid": "6b6084cffdc22ef798bbbbf24f18e51a1b5a1d19",
+      "headRepository": "hannestschofenig/jwe-detached-aad",
+      "headRefName": "patch-1",
+      "headRefOid": "ec7dee4682aca99a4e64476fa7c177787dfab8a4",
+      "closedAt": "2025-01-24T15:56:03Z",
+      "mergedAt": "2025-01-24T15:56:03Z",
+      "mergedBy": "tireddy2",
+      "mergeCommit": {
+        "oid": "97f5a46e966a629981f5621e8b2c756fbcb218b3"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDONqtXSs6ZXT3Z",
+          "commit": {
+            "abbreviatedOid": "ec7dee4"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-01-24T15:55:54Z",
+          "updatedAt": "2025-01-24T15:55:54Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
