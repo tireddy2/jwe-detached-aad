@@ -139,7 +139,7 @@ The "aad_detached": true parameter is included in the JWE Protected Header. For 
 
 # Deriving detached AAD
 
-## Steps for Derivation {#Derived}
+## Steps for Derivation {#Derive}
 
 When using detached AAD, the sender and receiver MUST follow the same derivation process to ensure consistent results. The derived AAD is never transmitted; instead, it is independently computed by both parties. The process involves:
 
@@ -196,7 +196,7 @@ When using detached AAD, the sender and receiver MUST follow the same derivation
       * The Additional Authenticated Data (AAD) encryption parameter is:
 
       ~~~
-         ASCII(Encoded Protected Header || '.' ||BASE64URL(JWE AAD)||BASE64URL(Detached AAD)).
+         ASCII(Encoded Protected Header || '.' ||BASE64URL(JWE AAD)|| '.' ||BASE64URL(Detached AAD)).
       ~~~
 
    -  Both the sender and receiver MUST compute the detached AAD independently to ensure consistency.
