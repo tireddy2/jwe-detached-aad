@@ -4,8 +4,8 @@
 
 JOSE                                                            T. Reddy
 Internet-Draft                                                     Nokia
-Intended status: Standards Track                         24 January 2025
-Expires: 28 July 2025
+Intended status: Standards Track                         27 January 2025
+Expires: 31 July 2025
 
 
 Enhanced JWE Security with Detached Additional Authenticated Data (AAD)
@@ -38,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 July 2025.
+   This Internet-Draft will expire on 31 July 2025.
 
 Copyright Notice
 
@@ -313,7 +313,7 @@ Derived AAD: "SHA256({"session_id":"sess-1234","timestamp":"2025-01-10T12:00Z"})
    -  The Additional Authenticated Data (AAD) encryption
       parameter is:
 
-   ASCII(Encoded Protected Header || '.' ||BASE64URL(JWE AAD)||BASE64URL(Detached AAD)).
+   ASCII(Encoded Protected Header || '.' ||BASE64URL(JWE AAD)|| '.' ||BASE64URL(Detached AAD)).
 
 *  Both the sender and receiver MUST compute the detached AAD
    independently to ensure consistency.
