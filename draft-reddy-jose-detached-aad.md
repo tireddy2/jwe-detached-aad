@@ -139,7 +139,7 @@ The "aad_detached": true parameter is included in the JWE Protected Header. For 
 
 # Deriving detached AAD
 
-## Steps for Derivation {#Derive}
+## Steps for Derivation {#Derived}
 
 When using detached AAD, the sender and receiver MUST follow the same derivation process to ensure consistent results. The derived AAD is never transmitted; instead, it is independently computed by both parties. The process involves:
 
