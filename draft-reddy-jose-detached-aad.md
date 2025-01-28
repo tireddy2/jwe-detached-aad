@@ -28,17 +28,18 @@ normative:
 
 --- abstract
 
-This draft introduces a mechanism for supporting detached Additional Authenticated Data (AAD) in JWE (JSON Web Encryption), enabling the AAD to be derived from context-specific information, such as session identifiers, timestamps, or request origins, rather than transmitted in-band. This mechanism enhances security by addressing attacks such as phishing attacks and contextual misuse, particularly in scenarios where context-specific AAD is used. The draft specifies how this functionality can be integrated into JWE, considering both JWE JSON Serialization and JWE Compact Serialization.
+This draft introduces a mechanism to support detached Additional Authenticated Data (AAD) in JWE (JSON Web Encryption), allowing the AAD to be derived from context-specific information, such as session identifiers, algorithm identifiers, and identifiers of communication endpoints, rather than being transmitted in-band. This mechanism strengthens security by mitigating risk against unknown-key-share attacks and/or other
+exploitation techniques that depend on some type of confusion over the role played by each party.
+
+The document explains how to integrate this functionality into JWE, covering both JWE JSON Serialization and JWE Compact Serialization.
 
 --- middle
 
 # Introduction
 
-In some use cases, it is beneficial to derive the Additional Authenticated Data (AAD) for JWE from out-of-band contextual information 
-rather than transmitting it directly in the message. This approach provides enhanced security by ensuring cryptographic binding of context-specific information, thus mitigating risks such as manipulation or misuse of contextual data.  Additionally, this method reduces the reliance on transmitted AAD, thereby minimizing the attack surface.
+In certain use cases, it is advantageous to derive the Additional Authenticated Data (AAD) for JWE from out-of-band contextual information, rather than transmitting it directly within the message. This approach enhances security by ensuring the cryptographic binding of context-specific information, helping to mitigate risks such as the manipulation or misuse of contextual data. Additionally, it reduces reliance on transmitted AAD, thus minimizing the attack surface.
 
-This document proposes a mechanism to handle detached AAD in JWE, where the AAD is not transmitted but is instead derived by both the 
-sender and receiver. The approach described here is applicable to both JWE JSON Serialization and JWE Compact Serialization. This mechanism is particularly relevant for scenarios like OpenID for Verifiable Credentials (OID4VC), where a verifier must validate contextual information without relying on in-band AAD.
+This document proposes a mechanism for handling detached AAD in JWE, where the AAD is derived by both the sender and receiver, rather than being transmitted. The described approach is applicable to both JWE JSON Serialization and JWE Compact Serialization. This mechanism is particularly useful in scenarios like OpenID for Verifiable Credentials (OID4VC), where a verifier must validate contextual information without depending on in-band AAD.
 
 # Conventions and Definitions
 
