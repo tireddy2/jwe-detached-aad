@@ -2,7 +2,7 @@
 
 This is the working area for the individual Internet-Draft, "Enhanced JWE Security with Detached AAD".
 
-* [Editor's Copy](https://github.com/tireddy2/jwe-detached-aad/draft-reddy-jose-detached-aad.txt)
+* [Editor's Copy](https://github.com/tireddy2/jwe-detached-aad/blob/main/draft-reddy-jose-detached-aad.txt)
 
 
 https://github.com/tireddy2/jwe-detached-aad/blob/main/draft-reddy-jose-detached-aad.md
