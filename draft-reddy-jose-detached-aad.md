@@ -90,7 +90,6 @@ surface and reduces the risks of tampering and replay.
 - Consistency Across Serializations: Supporting detached AAD in both JWE JSON Serialization and JWE Compact Serialization enables a consistent approach
 to context-specific AAD across various serialization formats.
 
-
 # JWE JSON Serialization
 
 When the AAD is detached, the "detached_aad" parameter is set to true, indicating that the AAD MUST be computed by both the sender and receiver from context information.
@@ -101,7 +100,6 @@ When the AAD is detached, the "detached_aad" parameter is set to true, indicatin
 - The derived AAD is treated as part of the encryption context but is never transmitted within the JWE structure.
 
 Example:
-
 
 A JSON Encoded JWE is shown below (with line-breaks added for readability).
 
@@ -136,7 +134,6 @@ After verification:
 
 In this case, the "aad_detached" parameter set to true indicates that the AAD must be derived from context information shared between the sender and receiver.
 
-
 # JWE Compact Serialization
 
 ## Supporting Detached AAD in JWE Compact Serialization
@@ -148,7 +145,7 @@ Compact Serialization format, as defined in Section 7.1 of {{RFC7516}}, remains 
 ## Mechanism Overview
 
 1. External Metadata for Detached AAD: The detached AAD is not included in the JWE Compact Serialization format.
-   
+
 2. Optional Protected Header Parameter:
    - A new optional parameter, "detached_aad", is introduced in the JWE Protected Header.
    - When set to `true`, this parameter indicates that the AAD is detached and must be obtained through an external context.
@@ -184,10 +181,10 @@ Example:
 ~~~
 
 4. Normalize Context Information Elements
-   - Each context element MUST be encoded as a UTF-8 string.  
+   - Each context element MUST be encoded as a UTF-8 string.
    - The elements MUST be sorted in lexicographical order of their keys (as per {{RFC8785}}), ensuring consistent ordering during derivation.
-   
-Example:  
+
+Example:
 
 ~~~
 Normalize Elements (Sorted): 
@@ -201,7 +198,7 @@ Normalize Elements (Sorted):
 5. Serialize the Canonicalized JSON: Serialize the canonicalized JSON object, ensuring it has no extra spaces or newlines.
 
 Example:
-   
+
 ~~~
 Concatenated String: {"sender": "alice@example.com","session_id":"sess-1234","receiver":"bob@example.com"}
 ~~~
