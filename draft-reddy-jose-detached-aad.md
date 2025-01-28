@@ -187,14 +187,14 @@ Example:
 Example:
 
 ~~~
-Normalize Elements (Sorted): 
+Normalize Elements (Sorted):
 {
    "sender": "alice@example.com",
    "session_id": "sess-1234",
    "receiver": "bob@example.com"
 }
 ~~~
-   
+
 5. Serialize the Canonicalized JSON: Serialize the canonicalized JSON object, ensuring it has no extra spaces or newlines.
 
 Example:
