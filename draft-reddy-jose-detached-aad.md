@@ -3,7 +3,7 @@ title: "Enhanced JWE Security with Detached Additional Authenticated Data (AAD)"
 abbrev: "Enhanced JWE Security with Detached AAD"
 category: std
 
-docname: draft-reddy-jose-detached-aad
+docname: draft-reddy-jose-detached-aad-latest
 submissiontype: IETF
 number:
 date:
