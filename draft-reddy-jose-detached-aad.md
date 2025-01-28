@@ -233,7 +233,7 @@ ASCII(Encoded Protected Header || '.' ||BASE64URL(JWE AAD)|| '.' ||BASE64URL(Det
 - Both the sender and receiver MUST independently compute the detached AAD to ensure consistency.
 - The detached AAD is not transmitted within the JWE structure; instead, it is derived from context information elements out-of-band.
 
-9. Error Handling: If the derived AAD does not match the expected value during decryption, the JWE MUST be treated as invalid, and the decryption process MUST fail. 
+9. Error Handling: If the derived AAD does not match the expected value during decryption, the JWE MUST be treated as invalid, and the decryption process MUST fail.
 
 # Security Considerations
 
