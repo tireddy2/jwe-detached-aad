@@ -59,7 +59,7 @@ This specification uses the AAD for including context information shared out of 
 directly within the message. It enhances security by ensuring the cryptographic binding of context information, by minimizing the attack surface.
 As a consequence, the AAD must be derived by both the sender and receiver independently. A JSON-based data structure is proposed to standardize
 the AAD information. The described approach is applicable to both JWE JSON Serialization and JWE Compact Serialization. This mechanism is
-particularly useful in scenarios like OpenID for Verifiable Credentials (OID4VC), where a verifier must validate contextual information without
+particularly useful in scenarios like OpenID for Verifiable Credentials (OID4VC), where a verifier must validate context information without
 depending on in-band AAD.
 
 # Conventions and Definitions
@@ -74,8 +74,8 @@ from a wallet application.
 In such scenarios:
 
 - The verifier sends a request to the wallet (typically a mobile app).
-- The wallet responds with an encrypted message that includes contextual information (e.g., the origin of the request) as part of the AAD.
-- Without proper validation of AAD, attackers could exploit vulnerabilities by manipulating contextual data, potentially leading to malicious actions.
+- The wallet responds with an encrypted message that includes context information (e.g., the origin and the recipient of the request) as part of the AAD.
+- Without proper validation of AAD, attackers could exploit vulnerabilities by manipulating context data, potentially leading to malicious actions.
 
 By requiring the verifier and wallet to securely agree on a method for deriving the AAD, the encrypted response can be cryptographically bound to the
 request's context. This ensures the response is valid only within its intended context, reducing risks such as phishing, replay, and tampering attacks.
@@ -134,7 +134,7 @@ After verification:
 }
 ~~~
 
-In this case, the "aad_detached" parameter set to true indicates that the AAD must be derived from contextual information shared between the sender and receiver.
+In this case, the "aad_detached" parameter set to true indicates that the AAD must be derived from context information shared between the sender and receiver.
 
 
 # JWE Compact Serialization
@@ -171,7 +171,7 @@ When using detached AAD, both the sender and receiver MUST follow the same deriv
 The derived AAD is never transmitted; instead, it is independently computed by both parties. The process for deriving
 the AAD involves the following steps:
 
-1. Identify Contextual Elements: Applications define the context information required for AAD derivation and they are shared by both sender and receiver.
+1. Identify Context Information Elements: Applications define the context information required for AAD derivation and they are shared by both sender and receiver.
 
 Example:
 
@@ -183,8 +183,8 @@ Example:
 }
 ~~~
 
-4. Normalize Contextual Elements
-   - Each contextual element MUST be encoded as a UTF-8 string.  
+4. Normalize Context Information Elements
+   - Each context element MUST be encoded as a UTF-8 string.  
    - The elements MUST be sorted in lexicographical order of their keys (as per {{RFC8785}}), ensuring consistent ordering during derivation.
    
 Example:  
@@ -231,7 +231,7 @@ ASCII(Encoded Protected Header || '.' ||BASE64URL(JWE AAD)|| '.' ||BASE64URL(Det
 ~~~
 
 - Both the sender and receiver MUST independently compute the detached AAD to ensure consistency.
-- The detached AAD is not transmitted within the JWE structure; instead, it is derived from contextual elements out-of-band.
+- The detached AAD is not transmitted within the JWE structure; instead, it is derived from context information elements out-of-band.
 
 9. Error Handling: If the derived AAD does not match the expected value during decryption, the JWE MUST be treated as invalid, and the decryption process MUST fail. 
 
@@ -241,7 +241,7 @@ Detached AAD enhances security by ensuring that the AAD is tightly bound to the 
 However, the following considerations must be observed:
 
 - Both the sender and recipient MUST use the same method to derive the AAD from the context to avoid mismatches, as discrepancies will lead to decryption failures.
-- Applications using detached AAD must ensure that contextual information is validated and securely exchanged to prevent manipulation by attackers.
+- Applications using detached AAD must ensure that context information is validated and securely exchanged to prevent manipulation by attackers.
 - Implementations should account for potential synchronization issues, such as clock drift, when deriving the AAD from time-sensitive context.
 
 #  IANA Considerations {#IANA}
