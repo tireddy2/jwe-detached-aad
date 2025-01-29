@@ -6,11 +6,16 @@
 <meta content="initial-scale=1.0" name="viewport">
 <title>Enhanced JWE Security with Detached Additional Authenticated Data (AAD)</title>
 <meta content="Tirumaleswar Reddy" name="author">
+<meta content="Hannes Tschofenig" name="author">
 <meta content="
-       This draft introduces a mechanism for supporting detached Additional Authenticated Data (AAD) in JWE (JSON Web Encryption), enabling the AAD to be derived from context-specific information, such as session identifiers, timestamps, or request origins, rather than transmitted in-band. This mechanism enhances security by addressing attacks such as phishing attacks and contextual misuse, particularly in scenarios where context-specific AAD is used. The draft specifies how this functionality can be integrated into JWE, considering both JWE JSON Serialization and JWE Compact Serialization. 
+       This draft introduces a mechanism to support detached Additional Authenticated Data (AAD) in JWE (JSON Web Encryption), allowing the AAD to be
+derived from context-specific information, such as session identifiers, algorithm identifiers, and identifiers of communication endpoints,
+rather than being transmitted in-band. This mechanism strengthens security by mitigating risk against unknown-key-share attacks and/or other
+exploitation techniques that depend on some type of confusion over the role played by each party. 
+       The document explains how to integrate this functionality into JWE, covering both JWE JSON Serialization and JWE Compact Serialization. 
     " name="description">
 <meta content="xml2rfc 3.25.0" name="generator">
-<meta content="draft-reddy-jose-detached-aad" name="ietf.draft">
+<meta content="draft-reddy-jose-detached-aad-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.25.0
     Python 3.12.8
@@ -1046,8 +1051,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <td class="right">January 2025</td>
 </tr></thead>
 <tfoot><tr>
-<td class="left">Reddy</td>
-<td class="center">Expires 31 July 2025</td>
+<td class="left">Reddy &amp; Tschofenig</td>
+<td class="center">Expires 2 August 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1057,20 +1062,24 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dt class="label-workgroup">Workgroup:</dt>
 <dd class="workgroup">JOSE</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
-<dd class="internet-draft">draft-reddy-jose-detached-aad</dd>
+<dd class="internet-draft">draft-reddy-jose-detached-aad-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-01-27" class="published">27 January 2025</time>
+<time datetime="2025-01-29" class="published">29 January 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-07-31">31 July 2025</time></dd>
-<dt class="label-authors">Author:</dt>
+<dd class="expires"><time datetime="2025-08-02">2 August 2025</time></dd>
+<dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
       <div class="author-name">T. Reddy</div>
 <div class="org">Nokia</div>
+</div>
+<div class="author">
+      <div class="author-name">H. Tschofenig</div>
+<div class="org">H-BRS</div>
 </div>
 </dd>
 </dl>
@@ -1078,7 +1087,22 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">Enhanced JWE Security with Detached Additional Authenticated Data (AAD)</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This draft introduces a mechanism for supporting detached Additional Authenticated Data (AAD) in JWE (JSON Web Encryption), enabling the AAD to be derived from context-specific information, such as session identifiers, timestamps, or request origins, rather than transmitted in-band. This mechanism enhances security by addressing attacks such as phishing attacks and contextual misuse, particularly in scenarios where context-specific AAD is used. The draft specifies how this functionality can be integrated into JWE, considering both JWE JSON Serialization and JWE Compact Serialization.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This draft introduces a mechanism to support detached Additional Authenticated Data (AAD) in JWE (JSON Web Encryption), allowing the AAD to be
+derived from context-specific information, such as session identifiers, algorithm identifiers, and identifiers of communication endpoints,
+rather than being transmitted in-band. This mechanism strengthens security by mitigating risk against unknown-key-share attacks and/or other
+exploitation techniques that depend on some type of confusion over the role played by each party.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">The document explains how to integrate this functionality into JWE, covering both JWE JSON Serialization and JWE Compact Serialization.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-discussion-venues">
+<a href="#name-discussion-venues" class="section-name selfRef">Discussion Venues</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">Discussion of this document takes place on the
+    TCP Maintenance and Minor Extensions  mailing list (tcpm@ietf.org),
+    which is archived at <span><a href="https://mailarchive.ietf.org/arch/browse/tcpm/">https://mailarchive.ietf.org/arch/browse/tcpm/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">Source for this draft and an issue tracker can be found at
+    <span><a href="https://github.com/boucadair/draft-boucadair-tcpm-rst-diagnostic-payload">https://github.com/boucadair/draft-boucadair-tcpm-rst-diagnostic-payload</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1099,7 +1123,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 31 July 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 2 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1138,7 +1162,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-motivation-and-use-cases" class="internal xref">Motivation and Use Cases</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-detached-aad-and-its-benefi" class="internal xref">Detached AAD and Its Benefits</a></p>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-benefits-of-detached-aad" class="internal xref">Benefits of Detached AAD</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-jwe-json-serialization" class="internal xref">JWE JSON Serialization</a></p>
@@ -1148,21 +1172,14 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
                 <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-supporting-detached-aad-in-" class="internal xref">Supporting Detached AAD in JWE Compact Serialization</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1.2.1">
-                    <p id="section-toc.1-1.6.2.1.2.1.1"><a href="#section-6.1.1" class="auto internal xref">6.1.1</a>.  <a href="#name-mechanism-overview" class="internal xref">Mechanism Overview</a></p>
 </li>
-                </ul>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-mechanism-overview" class="internal xref">Mechanism Overview</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-deriving-detached-aad" class="internal xref">Deriving detached AAD</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
-                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-steps-for-derivation" class="internal xref">Steps for Derivation</a></p>
-</li>
-            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
@@ -1187,7 +1204,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref"></a><a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1198,10 +1215,19 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">In some use cases, it is beneficial to derive the Additional Authenticated Data (AAD) for JWE from out-of-band contextual information 
-rather than transmitting it directly in the message. This approach provides enhanced security by ensuring cryptographic binding of context-specific information, thus mitigating risks such as manipulation or misuse of contextual data.  Additionally, this method reduces the reliance on transmitted AAD, thereby minimizing the attack surface.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">This document proposes a mechanism to handle detached AAD in JWE, where the AAD is not transmitted but is instead derived by both the 
-sender and receiver. The approach described here is applicable to both JWE JSON Serialization and JWE Compact Serialization. This mechanism is particularly relevant for scenarios like OpenID for Verifiable Credentials (OID4VC), where a verifier must validate contextual information without relying on in-band AAD.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-1">Encryption of payloads is encrypted using a symmetric content encryption key, which can be established through various key distribution mechanisms.
+Examples of such content key distribution mechanisms includes public key encryption, such as HPKE and ephemeral-static Diffie-Hellman. As part of
+this content key distribution mechanism an important design decision is what information is included about the context in which the encryption is
+use. This ensures that the content key material is "bound" to the context of the transaction.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">There are various techniques to ensure that the established content encryption key is not used across context, such as including the context
+in the key dervication function, including extra context information in JOSE headers, or including out-of-band information in the Additional
+Authenticated Data (AAD).<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">This specification uses the AAD for including context information shared out of band. This approach reduces the amount of data transmitting
+directly within the message. It enhances security by ensuring the cryptographic binding of context information, by minimizing the attack surface.
+As a consequence, the AAD must be derived by both the sender and receiver independently. A JSON-based data structure is proposed to standardize
+the AAD information. The described approach is applicable to both JWE JSON Serialization and JWE Compact Serialization. This mechanism is
+particularly useful in scenarios like OpenID for Verifiable Credentials (OID4VC), where a verifier must validate context information without
+depending on in-band AAD.<a href="#section-1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1220,38 +1246,41 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-motivation-and-use-cases">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-motivation-and-use-cases" class="section-name selfRef">Motivation and Use Cases</a>
       </h2>
-<p id="section-3-1">A typical use case for detached AAD arises in protocols such as OID4VC, where a verifier may receive a JWE response from a wallet app.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">A common use case for detached AAD arises in protocols like OpenID for Verifiable Credentials (OID4VC), where a verifier receives a JWE response
+from a wallet application.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">In such scenarios:<a href="#section-3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-3.1">
-          <p id="section-3-3.1.1">The verifier sends a request to the wallet (usually a mobile app).<a href="#section-3-3.1.1" class="pilcrow">¶</a></p>
+          <p id="section-3-3.1.1">The verifier sends a request to the wallet (typically a mobile app).<a href="#section-3-3.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-3.2">
-          <p id="section-3-3.2.1">The wallet responds with an encrypted message that includes contextual information (e.g., the origin of the request) as part of the AAD.<a href="#section-3-3.2.1" class="pilcrow">¶</a></p>
+          <p id="section-3-3.2.1">The wallet responds with an encrypted message that includes context information (e.g., the origin and the recipient of the request) as part of the AAD.<a href="#section-3-3.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-3-3.3">
-          <p id="section-3-3.3.1">Without proper validation of AAD, attackers could exploit vulnerabilities by manipulating contextual information, potentially leading to  malicious actions.<a href="#section-3-3.3.1" class="pilcrow">¶</a></p>
+          <p id="section-3-3.3.1">Without proper validation of AAD, attackers could exploit vulnerabilities by manipulating context data, potentially leading to malicious actions.<a href="#section-3-3.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-3-4">By requiring the verifier and wallet to securely agree on the method to derive AAD, the encrypted response can be cryptographically bound to the request's context. This ensures that the response is valid only within its intended context, mitigating risks such as phishing, replay and tampering attacks.<a href="#section-3-4" class="pilcrow">¶</a></p>
+<p id="section-3-4">By requiring the verifier and wallet to securely agree on a method for deriving the AAD, the encrypted response can be cryptographically bound to the
+request's context. This ensures the response is valid only within its intended context, reducing risks such as phishing, replay, and tampering attacks.<a href="#section-3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="detached-aad-and-its-benefits">
+<div id="benefits-of-detached-aad">
 <section id="section-4">
-      <h2 id="name-detached-aad-and-its-benefi">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-detached-aad-and-its-benefi" class="section-name selfRef">Detached AAD and Its Benefits</a>
+      <h2 id="name-benefits-of-detached-aad">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-benefits-of-detached-aad" class="section-name selfRef">Benefits of Detached AAD</a>
       </h2>
-<p id="section-4-1">The introduction of detached AAD provides the following benefits:<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">The introduction of detached AAD offers several key benefits:<a href="#section-4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4-2.1">
-          <p id="section-4-2.1.1">Improved Security: Deriving AAD directly from the context eliminates the reliance on transmitting and validating in-band AAD. This reduces the potential attack surface by minimizing the risk of tampering or replay.<a href="#section-4-2.1.1" class="pilcrow">¶</a></p>
+          <p id="section-4-2.1.1">Improved Security: By deriving AAD directly from the context, the need to transmit and validate in-band AAD is eliminated. This minimizes the attack
+surface and reduces the risks of tampering and replay.<a href="#section-4-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-4-2.2">
-          <p id="section-4-2.2.1">Enhanced Flexibility: Applications have greater control over the AAD's use, ensuring it is only transmitted when necessary and 
-derived out-of-band otherwise.<a href="#section-4-2.2.1" class="pilcrow">¶</a></p>
+          <p id="section-4-2.2.1">Enhanced Flexibility: Applications gain greater control over AAD usage, ensuring it is transmitted only when necessary and otherwise derived out-of-band.<a href="#section-4-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-4-2.3">
-          <p id="section-4-2.3.1">Consistency Across serializations: By supporting detached AAD in both JWE JSON Serialization and JWE Compact Serialization, a consistent approach to context-specific AAD can be adopted across different serializations.<a href="#section-4-2.3.1" class="pilcrow">¶</a></p>
+          <p id="section-4-2.3.1">Consistency Across Serializations: Supporting detached AAD in both JWE JSON Serialization and JWE Compact Serialization enables a consistent approach
+to context-specific AAD across various serialization formats.<a href="#section-4-2.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
@@ -1261,27 +1290,30 @@ derived out-of-band otherwise.<a href="#section-4-2.2.1" class="pilcrow">¶</a><
       <h2 id="name-jwe-json-serialization">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-jwe-json-serialization" class="section-name selfRef">JWE JSON Serialization</a>
       </h2>
-<p id="section-5-1">When the AAD is detached, the "detached_aad" parameter is set to true, indicating that the AAD <span class="bcp14">MUST</span> be computed by both the sender and receiver from contextual information.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-1">When the AAD is detached, the "detached_aad" parameter is set to true, indicating that the AAD <span class="bcp14">MUST</span> be computed by both the sender and receiver from context information.<a href="#section-5-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5-2.1">
-          <p id="section-5-2.1.1">If the "detached_aad" parameter is set to true, the detached AAD <span class="bcp14">MUST</span> be derived out-of-band, following the process outlined in Step 5 of <a href="#Derived" class="auto internal xref">Section 7.1</a>.<a href="#section-5-2.1.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.1.1">If the "detached_aad" parameter is true, the detached AAD <span class="bcp14">MUST</span> be derived out-of-band, following the process specified in Step 5 of <a href="#Derived" class="auto internal xref">Section 7</a>.<a href="#section-5-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-2.2">
           <p id="section-5-2.2.1">If the "aad" parameter contains data, it is used directly as the AAD for encryption.<a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-2.3">
-          <p id="section-5-2.3.1">If both the "detached_aad" and "aad" parameters are present, the AADs are combined and used according to the process described in Step 5 of <a href="#Derived" class="auto internal xref">Section 7.1</a>.<a href="#section-5-2.3.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.3.1">If both the "detached_aad" and "aad" parameters are present, the AADs are combined and used according to the process outlined in Step 5 of <a href="#Derived" class="auto internal xref">Section 7</a>.<a href="#section-5-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-5-2.4">
-          <p id="section-5-2.4.1">The derived AAD is treated as part of the encryption context, but is never transmitted within the JWE structure.<a href="#section-5-2.4.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.4.1">The derived AAD is treated as part of the encryption context but is never transmitted within the JWE structure.<a href="#section-5-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-5-3">Example:<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">A JSON Encoded JWE:<a href="#section-5-4" class="pilcrow">¶</a></p>
+<p id="section-5-4">A JSON Encoded JWE is shown below (with line-breaks added for readability).<a href="#section-5-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5-5">
 <pre>
 {
-  "protected": "eyJhbGciOiJIUEtFLVAyNTYtU0hBMjU2LUExMjhHQ00iLCJlbmMiOiJkaXIiLCJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjpTNkFYZmRVXzZZZnp2dTBLRERKYjBzRnV3bklXUGs2TE1URXJZaFBiMzJzIiwicHNrX2lkIjoib3VyLXByZS1zaGFyZWQta2V5LWlkIiwiYXV0aF9raWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjpTNkFYZmRVXzZZZnp2dTBLRERKYjBzRnV3bklXUGs2TE1URXJZaFBiMzJzIn0",
+  "protected": "eyJhbGciOiJIUEtFLVAyNTYtU0hBMjU2LUExMjhHQ00iLCJlbmMiOiJkaXIiLCJraWQiOiJ1cm46aWV0ZjpwYXJhbXM6b
+   2F1dGg6andrLXRodW1icHJpbnQ6c2hhLTI1NjpTNkFYZmRVXzZZZnp2dTBLRERKYjBzRnV3bklXUGs2TE1URXJZaFBiMzJzIiwicHNrX2l
+   kIjoib3VyLXByZS1zaGFyZWQta2V5LWlkIiwiYXV0aF9raWQiOiJ1cm46aWV0ZjpwYXJhbXM6b2F1dGg6andrLXRodW1icHJpbnQ6c2hhL
+   TI1NjpTNkFYZmRVXzZZZnp2dTBLRERKYjBzRnV3bklXUGs2TE1URXJZaFBiMzJzIn0",
   "encrypted_key": "BD7QVodtG-FwYASgb36zuTzUCc80aiYwS6JOOE-6_heUGyAZt-cU0818e4oYqP7ebBuW3KTM9EQA0vM5fWp6hj0",
   "ciphertext": "ZxqtYoomgVQGctnv1I_EBVI1NIeJ7qJw2iVtqwUw3fXa8FK-",
   "aad": "8J-PtOKAjeKYoO-4jyBiZXdhcmUgdGhlIGFhZCE"
@@ -1305,7 +1337,7 @@ derived out-of-band otherwise.<a href="#section-4-2.2.1" class="pilcrow">¶</a><
 }
 </pre><a href="#section-5-7" class="pilcrow">¶</a>
 </div>
-<p id="section-5-8">In this case, the "aad_detached" parameter set to true indicates that the AAD must be derived from contextual information shared between the sender and receiver.<a href="#section-5-8" class="pilcrow">¶</a></p>
+<p id="section-5-8">In this case, the "aad_detached" parameter set to true indicates that the AAD must be derived from context information shared between the sender and receiver.<a href="#section-5-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="jwe-compact-serialization">
@@ -1318,184 +1350,159 @@ derived out-of-band otherwise.<a href="#section-4-2.2.1" class="pilcrow">¶</a><
         <h3 id="name-supporting-detached-aad-in-">
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-supporting-detached-aad-in-" class="section-name selfRef">Supporting Detached AAD in JWE Compact Serialization</a>
         </h3>
-<p id="section-6.1-1">To enable the use of detached Additional Authenticated Data (AAD) without introducing backward compatibility issues, this specification defines a mechanism that leverages external context-specific information and an optional protected header parameter to signal the presence of detached AAD. The existing JWE Compact Serialization format, as defined in Section 7.1 of <span>[<a href="#RFC7516" class="cite xref">RFC7516</a>]</span>, remains unchanged.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1-1">To enable the use of detached Additional Authenticated Data (AAD) without introducing backward compatibility issues, this specification defines a mechanism
+that leverages external context-specific information and an optional protected header parameter to signal the presence of detached AAD. The existing JWE
+Compact Serialization format, as defined in Section 7.1 of <span>[<a href="#RFC7516" class="cite xref">RFC7516</a>]</span>, remains unchanged.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 <div id="mechanism-overview">
-<section id="section-6.1.1">
-          <h4 id="name-mechanism-overview">
-<a href="#section-6.1.1" class="section-number selfRef">6.1.1. </a><a href="#name-mechanism-overview" class="section-name selfRef">Mechanism Overview</a>
-          </h4>
-<ol start="1" type="1" class="normal type-1" id="section-6.1.1-1">
-<li id="section-6.1.1-1.1">
-              <p id="section-6.1.1-1.1.1">External Metadata for Detached AAD:<a href="#section-6.1.1-1.1.1" class="pilcrow">¶</a></p>
+<section id="section-6.2">
+        <h3 id="name-mechanism-overview">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-mechanism-overview" class="section-name selfRef">Mechanism Overview</a>
+        </h3>
+<ol start="1" type="1" class="normal type-1" id="section-6.2-1">
+<li id="section-6.2-1.1">
+            <p id="section-6.2-1.1.1">External Metadata for Detached AAD: The detached AAD is not included in the JWE Compact Serialization format.<a href="#section-6.2-1.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-6.2-1.2">
+            <p id="section-6.2-1.2.1">Optional Protected Header Parameter:<a href="#section-6.2-1.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6.1.1-1.1.2.1">
-                  <p id="section-6.1.1-1.1.2.1.1">The detached AAD is not included in the JWE Compact Serialization format.<a href="#section-6.1.1-1.1.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.2-1.2.2.1">
+                <p id="section-6.2-1.2.2.1.1">A new optional parameter, "detached_aad", is introduced in the JWE Protected Header.<a href="#section-6.2-1.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              </ul>
+              <li class="normal" id="section-6.2-1.2.2.2">
+                <p id="section-6.2-1.2.2.2.1">When set to <code>true</code>, this parameter indicates that the AAD is detached and must be obtained through an external context.<a href="#section-6.2-1.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li id="section-6.1.1-1.2">
-              <p id="section-6.1.1-1.2.1">Optional Protected Header Parameter:<a href="#section-6.1.1-1.2.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-6.1.1-1.2.2.1">
-                  <p id="section-6.1.1-1.2.2.1.1">A new optional parameter, "detached_aad", is introduced in the JWE Protected Header.<a href="#section-6.1.1-1.2.2.1.1" class="pilcrow">¶</a></p>
+            </ul>
 </li>
-                <li class="normal" id="section-6.1.1-1.2.2.2">
-                  <p id="section-6.1.1-1.2.2.2.1">When set to <code>true</code>, this parameter indicates that the AAD is detached and must be obtained through an external context.<a href="#section-6.1.1-1.2.2.2.1" class="pilcrow">¶</a></p>
+          <li id="section-6.2-1.3">
+            <p id="section-6.2-1.3.1">Backward Compatibility: This mechanism does not alter the structure of the JWE Compact Serialization format, ensuring full compatibility with existing implementations.<a href="#section-6.2-1.3.1" class="pilcrow">¶</a></p>
 </li>
-              </ul>
-</li>
-            <li id="section-6.1.1-1.3">
-              <p id="section-6.1.1-1.3.1">Backward Compatibility:<a href="#section-6.1.1-1.3.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-6.1.1-1.3.2.1">
-                  <p id="section-6.1.1-1.3.2.1.1">This mechanism does not alter the structure of the JWE Compact Serialization format, ensuring full compatibility with existing implementations.<a href="#section-6.1.1-1.3.2.1.1" class="pilcrow">¶</a></p>
-</li>
-              </ul>
-</li>
-          </ol>
-<p id="section-6.1.1-2">The "aad_detached": true parameter is included in the JWE Protected Header. For example:<a href="#section-6.1.1-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-6.1.1-3">
+        </ol>
+<p id="section-6.2-2">The "aad_detached": true parameter is included in the JWE Protected Header. For example:<a href="#section-6.2-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.2-3">
 <pre>
 {
   "alg": "HPKE-0",
   "enc": "A256GCM",
   "detached_aad": true
 }
-</pre><a href="#section-6.1.1-3" class="pilcrow">¶</a>
+</pre><a href="#section-6.2-3" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 </section>
 </div>
-</section>
-</div>
-<div id="deriving-detached-aad">
+<div id="Derived">
 <section id="section-7">
       <h2 id="name-deriving-detached-aad">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-deriving-detached-aad" class="section-name selfRef">Deriving detached AAD</a>
       </h2>
-<div id="Derived">
-<section id="section-7.1">
-        <h3 id="name-steps-for-derivation">
-<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-steps-for-derivation" class="section-name selfRef">Steps for Derivation</a>
-        </h3>
-<p id="section-7.1-1">When using detached AAD, the sender and receiver <span class="bcp14">MUST</span> follow the same derivation process to ensure consistent results. The derived AAD is never transmitted; instead, it is independently computed by both parties. The process involves:<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-7.1-2">
-<li id="section-7.1-2.1">
-            <p id="section-7.1-2.1.1">Identify Contextual Elements<a href="#section-7.1-2.1.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-7.1-2.1.2.1">
-                <p id="section-7.1-2.1.2.1.1">Applications define the contextual elements required for AAD derivation. These elements are shared or understood by both sender and receiver. Example:<a href="#section-7.1-2.1.2.1.1" class="pilcrow">¶</a></p>
+<p id="section-7-1">When using detached AAD, both the sender and receiver <span class="bcp14">MUST</span> follow the same derivation process to ensure consistency.
+The derived AAD is never transmitted; instead, it is independently computed by both parties. The process for deriving
+the AAD involves the following steps:<a href="#section-7-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-7-2">
+<li id="section-7-2.1">
+          <p id="section-7-2.1.1">Identify Context Information Elements: Applications define the context information required for AAD derivation and they are shared by both sender and receiver.<a href="#section-7-2.1.1" class="pilcrow">¶</a></p>
 </li>
-            </ul>
-<div class="alignLeft art-text artwork" id="section-7.1-2.1.3">
+      </ol>
+<p id="section-7-3">Example:<a href="#section-7-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-7-4">
 <pre>
 {
    "session_id": "sess-1234",
-   "timestamp": "2025-01-10T12:00Z"
+   "sender": "alice@example.com",
+   "receiver": "bob@example.com"
 }
-</pre><a href="#section-7.1-2.1.3" class="pilcrow">¶</a>
+</pre><a href="#section-7-4" class="pilcrow">¶</a>
 </div>
-</li>
-          <li id="section-7.1-2.2">
-            <p id="section-7.1-2.2.1">Normalize Contextual Elements<a href="#section-7.1-2.2.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-7-5">
+<li id="section-7-5.1">
+          <p id="section-7-5.1.1">Normalize Context Information Elements<a href="#section-7-5.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7.1-2.2.2.1">
-                <p id="section-7.1-2.2.2.1.1">Each contextual element <span class="bcp14">MUST</span> be encoded as a UTF-8 string.<a href="#section-7.1-2.2.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-5.1.2.1">
+              <p id="section-7-5.1.2.1.1">Each context element <span class="bcp14">MUST</span> be encoded as a UTF-8 string.<a href="#section-7-5.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-7.1-2.2.2.2">
-                <p id="section-7.1-2.2.2.2.1">The elements <span class="bcp14">MUST</span> be sorted in lexicographical order of their keys (as per <span>[<a href="#RFC8785" class="cite xref">RFC8785</a>]</span>), ensuring consistent ordering during derivation.
-Example:<a href="#section-7.1-2.2.2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7-5.1.2.2">
+              <p id="section-7-5.1.2.2.1">The elements <span class="bcp14">MUST</span> be sorted in lexicographical order of their keys (as per <span>[<a href="#RFC8785" class="cite xref">RFC8785</a>]</span>), ensuring consistent ordering during derivation.<a href="#section-7-5.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            </ul>
-<div class="alignLeft art-text artwork" id="section-7.1-2.2.3">
+          </ul>
+</li>
+      </ol>
+<p id="section-7-6">Example:<a href="#section-7-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-7-7">
 <pre>
 Normalize Elements (Sorted):
 {
+   "sender": "alice@example.com",
    "session_id": "sess-1234",
-   "timestamp": "2025-01-10T12:00Z"
+   "receiver": "bob@example.com"
 }
-</pre><a href="#section-7.1-2.2.3" class="pilcrow">¶</a>
+</pre><a href="#section-7-7" class="pilcrow">¶</a>
 </div>
+<ol start="1" type="1" class="normal type-1" id="section-7-8">
+<li id="section-7-8.1">
+          <p id="section-7-8.1.1">Serialize the Canonicalized JSON: Serialize the canonicalized JSON object, ensuring it has no extra spaces or newlines.<a href="#section-7-8.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7.1-2.3">
-            <p id="section-7.1-2.3.1">Serialize the Canonicalized JSON<a href="#section-7.1-2.3.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-7.1-2.3.2.1">
-                <p id="section-7.1-2.3.2.1.1">Serialize the canonicalized JSON object, ensuring it has no extra spaces or newlines.
-Example:<a href="#section-7.1-2.3.2.1.1" class="pilcrow">¶</a></p>
-</li>
-            </ul>
-<div class="alignLeft art-text artwork" id="section-7.1-2.3.3">
+      </ol>
+<p id="section-7-9">Example:<a href="#section-7-9" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-7-10">
 <pre>
-Concatenated String: {"session_id":"sess-1234","timestamp":"2025-01-10T12:00Z"}
-</pre><a href="#section-7.1-2.3.3" class="pilcrow">¶</a>
+Concatenated String: {"sender": "alice@example.com","session_id":"sess-1234","receiver":"bob@example.com"}
+</pre><a href="#section-7-10" class="pilcrow">¶</a>
 </div>
+<ol start="1" type="1" class="normal type-1" id="section-7-11">
+<li id="section-7-11.1">
+          <p id="section-7-11.1.1">Apply Cryptographic Hashing: Apply a cryptographic hash function (e.g., SHA-256) to the serialized canonicalized JSON string to derive the AAD. The resulting hash will serve as the AAD used in the encryption operation. The use of SHA-256 is <span class="bcp14">RECOMMENDED</span>; however, other cryptographic hash functions <span class="bcp14">MAY</span> be used if they provide equivalent or stronger security properties.<a href="#section-7-11.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7.1-2.4">
-            <p id="section-7.1-2.4.1">Apply Cryptographic Hashing<a href="#section-7.1-2.4.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-7.1-2.4.2.1">
-                <p id="section-7.1-2.4.2.1.1">Apply a cryptographic hash function (e.g., SHA-256) to the serialized canonicalized JSON string to derive the AAD. The resulting hash will serve as the AAD used in the encryption operation. The use of SHA-256 is <span class="bcp14">RECOMMENDED</span>; however, other cryptographic hash functions <span class="bcp14">MAY</span> be used if they provide equivalent or stronger security properties.
-Example:<a href="#section-7.1-2.4.2.1.1" class="pilcrow">¶</a></p>
-</li>
-            </ul>
-<div class="alignLeft art-text artwork" id="section-7.1-2.4.3">
+      </ol>
+<p id="section-7-12">Example:<a href="#section-7-12" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-7-13">
 <pre>
 Derived AAD: "SHA256({"session_id":"sess-1234","timestamp":"2025-01-10T12:00Z"})"
-</pre><a href="#section-7.1-2.4.3" class="pilcrow">¶</a>
+</pre><a href="#section-7-13" class="pilcrow">¶</a>
 </div>
+<ol start="1" type="1" class="normal type-1" id="section-7-14">
+<li id="section-7-14.1">
+          <p id="section-7-14.1.1">Use the Derived AAD in Encryption<a href="#section-7-14.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7.1-2.5">
-            <p id="section-7.1-2.5.1">Use the Derived AAD in Encryption<a href="#section-7.1-2.5.1" class="pilcrow">¶</a></p>
+      </ol>
 <ul class="normal">
-<li class="normal" id="section-7.1-2.5.2.1">
-                <p id="section-7.1-2.5.2.1.1">The Step 15 in Section 5.1 of of <span>[<a href="#RFC7516" class="cite xref">RFC7516</a>]</span> specifies how the AAD is used in the encryption operation. In the detached AAD case, the derived AAD is treated as though it were part of the encryption context, even though it is never transmitted within the JWE structure.<a href="#section-7.1-2.5.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-15.1">
+          <p id="section-7-15.1.1">Step 15 in Section 5.1 of <span>[<a href="#RFC7516" class="cite xref">RFC7516</a>]</span> outlines how the AAD is used in the encryption operation. In the case of detached AAD, the derived AAD is treated as part of the encryption context, even though it is never transmitted within the JWE structure.<a href="#section-7-15.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-7.1-2.5.2.2">
-                <p id="section-7.1-2.5.2.2.1">In the case of a message without the JWE AAD but with the derived AAD, the derived AAD is used alongside the Content Encryption Key (CEK), JWE IV, and the message M to create the JWE Ciphertext and JWE Authentication Tag.<a href="#section-7.1-2.5.2.2.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-7.1-2.5.2.2.2.1">
-                    <p id="section-7.1-2.5.2.2.2.1.1">The Additional Authenticated Data (AAD) encryption parameter is:<a href="#section-7.1-2.5.2.2.2.1.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-7-15.2">
+          <p id="section-7-15.2.1">For a message that lacks the JWE AAD but includes the derived AAD, the derived AAD is used in conjunction with the Content Encryption Key (CEK), JWE IV, and the message M to generate the JWE Ciphertext and JWE Authentication Tag. The Additional Authenticated Data (AAD) encryption parameter is:<a href="#section-7-15.2.1" class="pilcrow">¶</a></p>
 </li>
-                </ul>
-<p id="section-7.1-2.5.2.2.3">
-~~~
-   ASCII(Encoded Protected Header || '.' ||BASE64URL(Detached AAD)).
- ~~~<a href="#section-7.1-2.5.2.2.3" class="pilcrow">¶</a></p>
-</li>
-              <li class="normal" id="section-7.1-2.5.2.3">
-                <p id="section-7.1-2.5.2.3.1">In the case of a message with the JWE AAD and the derived AAD, the derived AAD is used alongside the Content Encryption Key (CEK), JWE IV, JWE AAD and the message M to create the JWE Ciphertext and JWE Authentication Tag.<a href="#section-7.1-2.5.2.3.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-7.1-2.5.2.3.2.1">
-                    <p id="section-7.1-2.5.2.3.2.1.1">The Additional Authenticated Data (AAD) encryption parameter is:<a href="#section-7.1-2.5.2.3.2.1.1" class="pilcrow">¶</a></p>
-</li>
-                </ul>
-<div class="alignLeft art-text artwork" id="section-7.1-2.5.2.3.3">
+      </ul>
+<div class="alignLeft art-text artwork" id="section-7-16">
 <pre>
-   ASCII(Encoded Protected Header || '.' ||BASE64URL(JWE AAD)|| '.' ||BASE64URL(Detached AAD)).
-</pre><a href="#section-7.1-2.5.2.3.3" class="pilcrow">¶</a>
+ASCII(Encoded Protected Header || '.' ||BASE64URL(Detached AAD)).
+</pre><a href="#section-7-16" class="pilcrow">¶</a>
 </div>
-</li>
-              <li class="normal" id="section-7.1-2.5.2.4">
-                <p id="section-7.1-2.5.2.4.1">Both the sender and receiver <span class="bcp14">MUST</span> compute the detached AAD independently to ensure consistency.<a href="#section-7.1-2.5.2.4.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="normal" id="section-7.1-2.5.2.5">
-                <p id="section-7.1-2.5.2.5.1">The detached AAD is never transmitted within the JWE structure but is derived from the contextual elements out-of-band.<a href="#section-7.1-2.5.2.5.1" class="pilcrow">¶</a></p>
-</li>
-            </ul>
-</li>
-          <li id="section-7.1-2.6">
-            <p id="section-7.1-2.6.1">Error Handling<a href="#section-7.1-2.6.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7.1-2.6.2.1">
-                <p id="section-7.1-2.6.2.1.1">If the derived AAD does not match the expected value during decryption, the JWE <span class="bcp14">MUST</span> be treated as invalid, and the decryption process <span class="bcp14">MUST</span> fail.<a href="#section-7.1-2.6.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7-17.1">
+          <p id="section-7-17.1.1">In the case of a message containing both the JWE AAD and the derived AAD, the derived AAD is used in conjunction with the Content Encryption Key (CEK), JWE IV, JWE AAD, and the message M to generate the JWE Ciphertext and JWE Authentication Tag. The Additional Authenticated Data (AAD) encryption parameter is:<a href="#section-7-17.1.1" class="pilcrow">¶</a></p>
 </li>
-            </ul>
-</li>
-        </ol>
-</section>
+      </ul>
+<div class="alignLeft art-text artwork" id="section-7-18">
+<pre>
+ASCII(Encoded Protected Header || '.' ||BASE64URL(JWE AAD)|| '.' ||BASE64URL(Detached AAD)).
+</pre><a href="#section-7-18" class="pilcrow">¶</a>
 </div>
+<ul class="normal">
+<li class="normal" id="section-7-19.1">
+          <p id="section-7-19.1.1">Both the sender and receiver <span class="bcp14">MUST</span> independently compute the detached AAD to ensure consistency.<a href="#section-7-19.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-7-19.2">
+          <p id="section-7-19.2.1">The detached AAD is not transmitted within the JWE structure; instead, it is derived from context information elements out-of-band.<a href="#section-7-19.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<ol start="1" type="1" class="normal type-1" id="section-7-20">
+<li id="section-7-20.1">
+          <p id="section-7-20.1.1">Error Handling: If the derived AAD does not match the expected value during decryption, the JWE <span class="bcp14">MUST</span> be treated as invalid, and the decryption process <span class="bcp14">MUST</span> fail.<a href="#section-7-20.1.1" class="pilcrow">¶</a></p>
+</li>
+      </ol>
 </section>
 </div>
 <div id="security-considerations">
@@ -1503,17 +1510,17 @@ Derived AAD: "SHA256({"session_id":"sess-1234","timestamp":"2025-01-10T12:00Z"})
       <h2 id="name-security-considerations">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-8-1">Detached AAD improves security by ensuring that AAD is tightly bound to the specific context shared by the sender and recipient. However, the following considerations apply:<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-1">Detached AAD enhances security by ensuring that the AAD is tightly bound to the specific context shared by both the sender and recipient.
+However, the following considerations must be observed:<a href="#section-8-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-8-2.1">
-          <p id="section-8-2.1.1">Both sender and recipient <span class="bcp14">MUST</span> use the same method to derive AAD from the context to prevent mismatches. Mismatches will result in 
-decryption failures.<a href="#section-8-2.1.1" class="pilcrow">¶</a></p>
+          <p id="section-8-2.1.1">Both the sender and recipient <span class="bcp14">MUST</span> use the same method to derive the AAD from the context to avoid mismatches, as discrepancies will lead to decryption failures.<a href="#section-8-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-8-2.2">
-          <p id="section-8-2.2.1">Applications using detached AAD must ensure that contextual information is validated and securely exchanged to prevent manipulation by attackers.<a href="#section-8-2.2.1" class="pilcrow">¶</a></p>
+          <p id="section-8-2.2.1">Applications using detached AAD must ensure that context information is validated and securely exchanged to prevent manipulation by attackers.<a href="#section-8-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-8-2.3">
-          <p id="section-8-2.3.1">Implementations should account for potential synchronization issues, such as clock drift, when deriving AAD from time-sensitive context.<a href="#section-8-2.3.1" class="pilcrow">¶</a></p>
+          <p id="section-8-2.3.1">Implementations should account for potential synchronization issues, such as clock drift, when deriving the AAD from time-sensitive context.<a href="#section-8-2.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
@@ -1592,8 +1599,8 @@ decryption failures.<a href="#section-8-2.1.1" class="pilcrow">¶</a></p>
 </div>
 <div id="authors-addresses">
 <section id="appendix-A">
-      <h2 id="name-authors-address">
-<a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Tirumaleswar Reddy</span></div>
@@ -1605,6 +1612,15 @@ decryption failures.<a href="#section-8-2.1.1" class="pilcrow">¶</a></p>
 <div class="email">
 <span>Email:</span>
 <a href="mailto:kondtir@gmail.com" class="email">kondtir@gmail.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Hannes Tschofenig</span></div>
+<div dir="auto" class="left"><span class="org">University of Applied Sciences Bonn-Rhein-Sieg</span></div>
+<div dir="auto" class="left"><span class="country-name">Germany</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:Hannes.Tschofenig@gmx.net" class="email">Hannes.Tschofenig@gmx.net</a>
 </div>
 </address>
 </section>

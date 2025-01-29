@@ -4,8 +4,8 @@
 
 JOSE                                                            T. Reddy
 Internet-Draft                                                     Nokia
-Intended status: Standards Track                         27 January 2025
-Expires: 31 July 2025
+Intended status: Standards Track                         28 January 2025
+Expires: 1 August 2025
 
 
 Enhanced JWE Security with Detached Additional Authenticated Data (AAD)
@@ -38,7 +38,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 July 2025.
+   This Internet-Draft will expire on 1 August 2025.
 
 Copyright Notice
 
@@ -50,29 +50,37 @@ Copyright Notice
    license-info) in effect on the date of publication of this document.
    Please review these documents carefully, as they describe your rights
    and restrictions with respect to this document.  Code Components
+
+
+
+Reddy                     Expires 1 August 2025                 [Page 1]
+
+Internet-Draft   Enhanced JWE Security with Detached AAD    January 2025
+
+
    extracted from this document must include Revised BSD License text as
    described in Section 4.e of the Trust Legal Provisions and are
    provided without warranty as described in the Revised BSD License.
 
 Table of Contents
 
-   1.  Introduction
-   2.  Conventions and Definitions
-   3.  Motivation and Use Cases
-   4.  Detached AAD and Its Benefits
-   5.  JWE JSON Serialization
-   6.  JWE Compact Serialization
-     6.1.  Supporting Detached AAD in JWE Compact Serialization
-       6.1.1.  Mechanism Overview
-   7.  Deriving detached AAD
-     7.1.  Steps for Derivation
-   8.  Security Considerations
-   9.  IANA Considerations
-     9.1.  JSON Web Signature and Encryption Header Parameters
-       9.1.1.  aad_detached
-   Acknowledgments
-   Normative References
-   Author's Address
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Conventions and Definitions . . . . . . . . . . . . . . . . .   3
+   3.  Motivation and Use Cases  . . . . . . . . . . . . . . . . . .   3
+   4.  Detached AAD and Its Benefits . . . . . . . . . . . . . . . .   3
+   5.  JWE JSON Serialization  . . . . . . . . . . . . . . . . . . .   4
+   6.  JWE Compact Serialization . . . . . . . . . . . . . . . . . .   5
+     6.1.  Supporting Detached AAD in JWE Compact Serialization  . .   5
+       6.1.1.  Mechanism Overview  . . . . . . . . . . . . . . . . .   5
+   7.  Deriving detached AAD . . . . . . . . . . . . . . . . . . . .   6
+     7.1.  Steps for Derivation  . . . . . . . . . . . . . . . . . .   6
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
+   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
+     9.1.  JSON Web Signature and Encryption Header Parameters . . .   8
+       9.1.1.  aad_detached  . . . . . . . . . . . . . . . . . . . .   8
+   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .   8
+   Normative References  . . . . . . . . . . . . . . . . . . . . . .   9
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
 
@@ -92,6 +100,19 @@ Table of Contents
    mechanism is particularly relevant for scenarios like OpenID for
    Verifiable Credentials (OID4VC), where a verifier must validate
    contextual information without relying on in-band AAD.
+
+
+
+
+
+
+
+
+
+Reddy                     Expires 1 August 2025                 [Page 2]
+
+Internet-Draft   Enhanced JWE Security with Detached AAD    January 2025
+
 
 2.  Conventions and Definitions
 
@@ -138,6 +159,17 @@ Table of Contents
       AAD's use, ensuring it is only transmitted when necessary and
       derived out-of-band otherwise.
 
+
+
+
+
+
+
+Reddy                     Expires 1 August 2025                 [Page 3]
+
+Internet-Draft   Enhanced JWE Security with Detached AAD    January 2025
+
+
    *  Consistency Across serializations: By supporting detached AAD in
       both JWE JSON Serialization and JWE Compact Serialization, a
       consistent approach to context-specific AAD can be adopted across
@@ -175,6 +207,24 @@ Table of Contents
 }
 
    After verification:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Reddy                     Expires 1 August 2025                 [Page 4]
+
+Internet-Draft   Enhanced JWE Security with Detached AAD    January 2025
+
 
 {
   "protectedHeader": {
@@ -225,6 +275,13 @@ Table of Contents
           Serialization format, ensuring full compatibility with
           existing implementations.
 
+
+
+Reddy                     Expires 1 August 2025                 [Page 5]
+
+Internet-Draft   Enhanced JWE Security with Detached AAD    January 2025
+
+
    The "aad_detached": true parameter is included in the JWE Protected
    Header.  For example:
 
@@ -272,6 +329,14 @@ Table of Contents
 
     *  Serialize the canonicalized JSON object, ensuring it has no
        extra spaces or newlines.  Example:
+
+
+
+
+Reddy                     Expires 1 August 2025                 [Page 6]
+
+Internet-Draft   Enhanced JWE Security with Detached AAD    January 2025
+
 
 Concatenated String: {"session_id":"sess-1234","timestamp":"2025-01-10T12:00Z"}
 
@@ -321,6 +386,14 @@ Derived AAD: "SHA256({"session_id":"sess-1234","timestamp":"2025-01-10T12:00Z"})
 *  The detached AAD is never transmitted within the JWE structure
    but is derived from the contextual elements out-of-band.
 
+
+
+
+Reddy                     Expires 1 August 2025                 [Page 7]
+
+Internet-Draft   Enhanced JWE Security with Detached AAD    January 2025
+
+
 6.  Error Handling
 
     *  If the derived AAD does not match the expected value during
@@ -369,6 +442,14 @@ Acknowledgments
 
    TODO
 
+
+
+
+Reddy                     Expires 1 August 2025                 [Page 8]
+
+Internet-Draft   Enhanced JWE Security with Detached AAD    January 2025
+
+
 Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
@@ -397,3 +478,27 @@ Author's Address
    Karnataka
    India
    Email: kondtir@gmail.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Reddy                     Expires 1 August 2025                 [Page 9]
