@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-28T01:38:51.055464+00:00",
+  "timestamp": "2025-01-30T01:37:49.965966+00:00",
   "repo": "tireddy2/jwe-detached-aad",
   "labels": [
     {
@@ -97,6 +97,38 @@
           "updatedAt": "2025-01-17T19:07:22Z"
         }
       ]
+    },
+    {
+      "number": 6,
+      "id": "I_kwDONqtXSs6nz5Db",
+      "title": "Add Reference to OID4VC",
+      "url": "https://github.com/tireddy2/jwe-detached-aad/issues/6",
+      "state": "OPEN",
+      "author": "hannestschofenig",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-01-28T11:42:37Z",
+      "updatedAt": "2025-01-28T11:42:37Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 8,
+      "id": "I_kwDONqtXSs6n0X21",
+      "title": "Defining a Standard Set of Context Information Elements",
+      "url": "https://github.com/tireddy2/jwe-detached-aad/issues/8",
+      "state": "OPEN",
+      "author": "hannestschofenig",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Currently, the AAD is defined as a JSON structure but none of the members are standardized. There is the question whether we could re-use claims from the already existing IANA JWT claims registry or whether we should define our own registry to improve interoperability.\n",
+      "createdAt": "2025-01-28T12:31:23Z",
+      "updatedAt": "2025-01-28T12:31:23Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -169,6 +201,102 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDONqtXSs6JMqeZ",
+      "title": "Updating Abstract and Introduction",
+      "url": "https://github.com/tireddy2/jwe-detached-aad/pull/5",
+      "state": "MERGED",
+      "author": "hannestschofenig",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-01-28T09:54:33Z",
+      "updatedAt": "2025-01-28T11:21:56Z",
+      "baseRepository": "tireddy2/jwe-detached-aad",
+      "baseRefName": "main",
+      "baseRefOid": "5b5a085a197eeea32e97eda1f66d06061fd68c0d",
+      "headRepository": "hannestschofenig/jwe-detached-aad",
+      "headRefName": "patch-2",
+      "headRefOid": "723d57962f4ee31b10aaec972ef28e0de15a378a",
+      "closedAt": "2025-01-28T11:21:56Z",
+      "mergedAt": "2025-01-28T11:21:56Z",
+      "mergedBy": "tireddy2",
+      "mergeCommit": {
+        "oid": "099673ce853816f4018c1986f6099c0a63787536"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDONqtXSs6Zp-kW",
+          "commit": {
+            "abbreviatedOid": "723d579"
+          },
+          "author": "tireddy2",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-01-28T11:21:49Z",
+          "updatedAt": "2025-01-28T11:21:49Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "id": "PR_kwDONqtXSs6JN4Rm",
+      "title": "Editorial Updates",
+      "url": "https://github.com/tireddy2/jwe-detached-aad/pull/7",
+      "state": "MERGED",
+      "author": "hannestschofenig",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I started working on the draft, updated the introduction, changed the context information in the examples, added myself as an author and made various other editorial changes.",
+      "createdAt": "2025-01-28T12:19:24Z",
+      "updatedAt": "2025-01-29T08:45:27Z",
+      "baseRepository": "tireddy2/jwe-detached-aad",
+      "baseRefName": "main",
+      "baseRefOid": "099673ce853816f4018c1986f6099c0a63787536",
+      "headRepository": "hannestschofenig/jwe-detached-aad",
+      "headRefName": "patch-3",
+      "headRefOid": "b83a3fa3490718c08a2dd84ce8adbb33667e08ee",
+      "closedAt": "2025-01-29T08:45:27Z",
+      "mergedAt": "2025-01-29T08:45:27Z",
+      "mergedBy": "tireddy2",
+      "mergeCommit": {
+        "oid": "fb0eb8ebe00ba2d7eb78cb518608d7547629bb4d"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 9,
+      "id": "PR_kwDONqtXSs6JWW3J",
+      "title": "Editorial updates",
+      "url": "https://github.com/tireddy2/jwe-detached-aad/pull/9",
+      "state": "OPEN",
+      "author": "tireddy2",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-01-29T11:46:18Z",
+      "updatedAt": "2025-01-29T11:46:18Z",
+      "baseRepository": "tireddy2/jwe-detached-aad",
+      "baseRefName": "main",
+      "baseRefOid": "fb0eb8ebe00ba2d7eb78cb518608d7547629bb4d",
+      "headRepository": "tireddy2/jwe-detached-aad",
+      "headRefName": "tireddy2-patch-2",
+      "headRefOid": "f04a0b02f7ba0fa3b6db394f77c8c1f9f1e0f087",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
