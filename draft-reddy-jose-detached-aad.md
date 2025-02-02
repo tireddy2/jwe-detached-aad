@@ -46,14 +46,9 @@ The document explains how to integrate this functionality into JWE, covering bot
 
 # Introduction
 
-Encryption of payloads is encrypted using a symmetric content encryption key, which can be established through various key distribution mechanisms.
-Examples of such content key distribution mechanisms includes public key encryption, such as HPKE and ephemeral-static Diffie-Hellman. As part of
-this content key distribution mechanism an important design decision is what information is included about the context in which the encryption is
-use. This ensures that the content key material is "bound" to the context of the transaction.
+Encryption of payloads is performed using a symmetric content encryption key, which can be established through various key distribution mechanisms. Examples of such content key distribution mechanisms include public key encryption, such as HPKE, and ephemeral-static Diffie-Hellman. As part of this content key distribution mechanism an important design decision is what information is included about the context in which the encryption is use. This ensures that the content key material is "bound" to the context of the transaction.
 
-There are various techniques to ensure that the established content encryption key is not used across context, such as including the context
-in the key dervication function, including extra context information in JOSE headers, or including out-of-band information in the Additional
-Authenticated Data (AAD).
+There are various techniques to ensure that the established content encryption key is not used across different contexts, such as incorporating the context into the key derivation function, adding extra context information in protected JOSE headers, or including out-of-band information in the Additional Authenticated Data (AAD).
 
 This specification uses the AAD for including context information shared out of band. This approach reduces the amount of data transmitting
 directly within the message. It enhances security by ensuring the cryptographic binding of context information, by minimizing the attack surface.
