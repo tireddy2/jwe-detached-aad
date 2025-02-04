@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-02-02T01:43:05.302721+00:00",
+  "timestamp": "2025-02-04T01:39:40.167975+00:00",
   "repo": "tireddy2/jwe-detached-aad",
   "labels": [
     {
@@ -277,24 +277,26 @@
       "id": "PR_kwDONqtXSs6JWW3J",
       "title": "Editorial updates",
       "url": "https://github.com/tireddy2/jwe-detached-aad/pull/9",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "tireddy2",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-01-29T11:46:18Z",
-      "updatedAt": "2025-01-29T11:46:18Z",
+      "updatedAt": "2025-02-02T12:00:46Z",
       "baseRepository": "tireddy2/jwe-detached-aad",
       "baseRefName": "main",
       "baseRefOid": "fb0eb8ebe00ba2d7eb78cb518608d7547629bb4d",
       "headRepository": "tireddy2/jwe-detached-aad",
       "headRefName": "tireddy2-patch-2",
       "headRefOid": "f04a0b02f7ba0fa3b6db394f77c8c1f9f1e0f087",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-02-02T12:00:46Z",
+      "mergedAt": "2025-02-02T12:00:46Z",
+      "mergedBy": "tireddy2",
+      "mergeCommit": {
+        "oid": "90052b349fa1cffd2ba32698061f5037554f0423"
+      },
       "comments": [],
       "reviews": []
     }
