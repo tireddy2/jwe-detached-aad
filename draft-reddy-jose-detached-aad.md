@@ -90,7 +90,7 @@ to context-specific AAD across various serialization formats.
 When the AAD is detached, the "detached_aad" parameter is set to true, indicating that the AAD MUST be computed by both the sender and receiver from context information.
 
 - If the "detached_aad" parameter is true, the detached AAD MUST be derived out-of-band, following the process specified in Step 5 of {{Derived}}.
-- If the "aad" parameter contains data, it is used directly as the AAD for encryption.
+- If the "aad" parameter contains data and the "detached_aad" parameter is not present or set to false, it is used directly as the AAD for encryption.
 - If both the "detached_aad" and "aad" parameters are present, the AADs are combined and used according to the process outlined in Step 5 of {{Derived}}.
 - The derived AAD is treated as part of the encryption context but is never transmitted within the JWE structure.
 
@@ -210,13 +210,13 @@ Derived AAD: "SHA256({"session_id":"sess-1234","timestamp":"2025-01-10T12:00Z"})
 
 - Step 15 in Section 5.1 of {{RFC7516}} outlines how the AAD is used in the encryption operation. In the case of detached AAD, the derived AAD is treated as part of the encryption context, even though it is never transmitted within the JWE structure.
 
-- For a message that lacks the JWE AAD but includes the derived AAD, the derived AAD is used in conjunction with the Content Encryption Key (CEK), JWE IV, and the message M to generate the JWE Ciphertext and JWE Authentication Tag. The Additional Authenticated Data (AAD) encryption parameter is:
+- Compact JWE and JWE JSON Serialization without an explicit JWE AAD: For a message that lacks the JWE AAD but includes the derived AAD, the derived AAD is used in conjunction with the Content Encryption Key (CEK), JWE IV, and the message M to generate the JWE Ciphertext and JWE Authentication Tag. The Additional Authenticated Data (AAD) encryption parameter is:
 
 ~~~
 ASCII(Encoded Protected Header || '.' ||BASE64URL(Detached AAD)).
 ~~~
 
-- In the case of a message containing both the JWE AAD and the derived AAD, the derived AAD is used in conjunction with the Content Encryption Key (CEK), JWE IV, JWE AAD, and the message M to generate the JWE Ciphertext and JWE Authentication Tag. The Additional Authenticated Data (AAD) encryption parameter is:
+- JWE JSON Serialization with an explicit JWE AAD: In the case of a message containing both the JWE AAD and the derived AAD, the derived AAD is used in conjunction with the Content Encryption Key (CEK), JWE IV, JWE AAD, and the message M to generate the JWE Ciphertext and JWE Authentication Tag. The Additional Authenticated Data (AAD) encryption parameter is:
 
 ~~~
 ASCII(Encoded Protected Header || '.' ||BASE64URL(JWE AAD)|| '.' ||BASE64URL(Detached AAD)).
